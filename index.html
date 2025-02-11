@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunars Clash of the Titans</title>
+  <meta name="description" content="Lunars Clash of the Titans - An epic PvM race with legendary challenges and iconic encounters.">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Base Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0a1f44, #1a3a6d);
+      color: #ffd700;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    /* Utility class */
+    .hidden {
+      display: none;
+    }
+    
+    /* Navigation Styles */
+    nav {
+      background: #112244;
+      padding: 10px 20px;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    nav .nav-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    nav a {
+      color: #ffd700;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: color 0.3s, transform 0.2s;
+    }
+    nav a:hover {
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+    /* Hamburger Menu (Mobile) */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: #ffd700;
+      margin: 4px;
+      transition: all 0.3s;
+    }
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    .nav-links.mobile {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background: #112244;
+      position: absolute;
+      top: 60px;
+      left: 0;
+    }
+    .nav-links.mobile a {
+      padding: 10px;
+      margin: 0;
+      border-top: 1px solid #ffd700;
+    }
+    
+    /* Banner Styles */
+    .banner {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      margin-top: 70px; /* extra margin to compensate for fixed nav */
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(255, 215, 0, 0.8);
+      animation: pulse 3s infinite alternate;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.02); }
+    }
+    
+    /* Content Box */
+    .content-box {
+      background: rgba(10, 31, 68, 0.9);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.8);
+      display: inline-block;
+      text-align: left;
+      margin-top: 20px;
+      transition: transform 0.3s;
+    }
+    .content-box:hover {
+      transform: scale(1.02);
+    }
+    
+    /* Challenges List */
+    .challenges ul {
+      list-style: none;
+      padding: 0;
+    }
+    .challenges ul li {
+      padding: 5px 0;
+      font-size: 16px;
+      text-align: left;
+    }
+    .challenges ul li ul {
+      list-style: disc;
+      margin-left: 20px;
+      padding: 5px 0;
+    }
+    .challenge-category {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      text-decoration: underline;
+      text-align: left;
+    }
+    
+    /* Fade-in Animation */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn ease-in 1s forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .gallery-item:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Modal Styles for Gallery */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1500; 
+      padding-top: 100px; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 10px;
+      box-shadow: 0px 0px 20px rgba(255, 215, 0, 0.8);
+    }
+    .modal-close {
+      position: absolute;
+      top: 40px;
+      right: 60px;
+      color: #ffd700;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .modal-close:hover {
+      color: #ffffff;
+    }
+    
+    /* Contact Form Styles */
+    .contact-form {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    .contact-form button {
+      background: #ffd700;
+      color: #112244;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .contact-form button:hover {
+      background: #e6c200;
+    }
+    
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #ffd700;
+      color: #112244;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: none;
+      z-index: 1500;
+      transition: background 0.3s;
+    }
+    .back-to-top:hover {
+      background: #e6c200;
+    }
+    
+    /* Footer Styles */
+    footer {
+      background: #112244;
+      padding: 15px 0;
+      margin-top: 40px;
+      color: #ffd700;
+      text-align: center;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      nav .nav-links {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .nav-links.mobile {
+        display: none; /* toggled via JS */
+      }
+      .content-box {
+        margin: 20px;
+      }
+    }
+  </style>
+  <script>
+    // Show the selected page and hide all others
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+      document.getElementById(pageId).classList.remove('hidden');
+      // Close mobile nav if open
+      if (document.querySelector('.hamburger').classList.contains('active')) {
+        toggleMobileMenu();
+      }
+      window.scrollTo(0, 0);
+    }
+    
+    // Toggle the mobile hamburger menu
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const mobileNav = document.querySelector('.nav-links.mobile');
+      hamburger.classList.toggle('active');
+      if (mobileNav.style.display === "flex") {
+        mobileNav.style.display = "none";
+      } else {
+        mobileNav.style.display = "flex";
+      }
+    }
+    
+    // Open the modal with the clicked gallery image
+    function openModal(imgSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.style.display = "block";
+      modalImg.src = imgSrc;
+    }
+    
+    // Close the modal
+    function closeModal() {
+      document.getElementById('imageModal').style.display = "none";
+    }
+    
+    // Handle contact form submission with basic validation
+    function submitContactForm(event) {
+      event.preventDefault();
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+      if(name === "" || email === "" || message === "") {
+        alert("Please fill in all fields.");
+        return;
+      }
+      // (Here you would typically send the form data to your server.)
+      alert("Thank you for your message, " + name + "!");
+      document.getElementById('contactForm').reset();
+    }
+    
+    // Show or hide the "Back to Top" button based on scroll position
+    function checkScroll() {
+      const backToTop = document.querySelector('.back-to-top');
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        backToTop.style.display = "block";
+      } else {
+        backToTop.style.display = "none";
+      }
+    }
+    
+    window.onload = () => {
+      // Remove fade-in class after a short delay for a smooth effect
+      document.querySelectorAll('.fade-in').forEach(element => {
+        setTimeout(() => {
+          element.classList.remove('fade-in');
+        }, 500);
+      });
+      window.addEventListener('scroll', checkScroll);
+    };
+  </script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">
+      <a onclick="showPage('home')" style="font-weight:bold; font-size:20px;">Lunars Clash of the Titans</a>
+    </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('challenges')">Challenges</a>
+      <a onclick="showPage('gallery')">Gallery</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="nav-links mobile">
+      <a onclick="showPage('home')">Home</a>
+      <a onclick="showPage('challenges')">Challenges</a>
+      <a onclick="showPage('gallery')">Gallery</a>
+      <a onclick="showPage('contact')">Contact</a>
+    </div>
+  </nav>
+  
+  <!-- Home Page -->
+  <div id="home" class="page container fade-in">
+    <img src="C:\Users\Galaxy\OneDrive - Fife College\Desktop\Clash of the Titans\cott_teaser_2.png" alt="Event Banner" class="banner">
+    <div class="content-box">
+      <h1>🌌 Lunars Clash of the Titans 🛡️</h1>
+      <p>The silence before the storm… can you feel it? This is the moment when legends are born and history is written. Today, as you stand on the precipice of battle, know that your courage, skill, and unyielding spirit are the true weapons that will carve your name into the annals of time.</p>
+      <p>Battles will rage, and challenges will push you to your limits, but every strike, every victory, and even every setback is a step toward greatness. Remember, the fiercest storms bring the most brilliant rainbows, and the darkest nights give way to the most radiant dawns. Your heart, full of passion and resolve, is your greatest ally.</p>
+      <p>In this grandest event we've ever hosted, every challenge is a call to rise above, to conquer the impossible, and to transform every fear into strength. Embrace the fire within you, rally your comrades, and march forward with unwavering determination. The journey may be treacherous, but the rewards are beyond measure—honor, glory, and the pride of knowing you fought with every ounce of your soul.</p>
+      <p>Let this be the spark that ignites a revolution in your spirit. Every moment, every clash, and every victory is a testament to the power that lies within you. This is more than a competition; it is the arena where heroes are made, where every heartbeat echoes with the promise of triumph. Stand tall, champion, for today, you write your destiny in the stars!</p>
+    </div>
+  </div>
+  
+  <!-- Challenges Page -->
+  <div id="challenges" class="page container hidden fade-in">
+    <div class="content-box">
+      <h1>🔥 PvM Challenges</h1>
+      <p>The challenges are divided into Easy, Medium, and Hard categories to accommodate all players. Each challenge must be completed as described and verified with the event keyword.</p>
+      <div class="challenges">
+        <div class="challenge-category">Easy Challenges 🛠️</div>
+        <ul>
+          <li>King Black Dragon – Kill KBD 5 times.</li>
+          <li>Giant Mole – Kill Giant Mole 3 times.</li>
+          <li>Chaos Elemental – Kill Chaos Elemental twice.</li>
+          <li>Barrows – Complete 5 Barrows runs (with at least 1 unique reward).</li>
+          <li>Dagannoth Kings – Kill each of the three Kings (Prime, Rex, and Supreme) once.</li>
+          <li>God Wars Dungeon 1 – Kill any of the following bosses 3 times:
+            <ul>
+              <li>General Graardor</li>
+              <li>Commander Zilyana</li>
+              <li>Kree’arra</li>
+              <li>K’ril Tsutsaroth</li>
+            </ul>
+          </li>
+          <li>Fight Caves – Complete a Fight Cave run.</li>
+          <li>Helwyr – Kill Helwyr 3 times.</li>
+          <li>Giant Mimic – Kill the Giant Mimic once.</li>
+          <li>Corrupted Creatures – Kill 10 Corrupted Creatures in the Sophanem Slayer Dungeon.</li>
+          <li>Queen Black Dragon (QBD) – Defeat QBD in less than 5 minutes.</li>
+          <li>Kalphite Queen – Kill Kalphite Queen twice.</li>
+          <li>Slayer Bosses – Kill any Slayer Boss (e.g., Ripper Demon or Camel Warrior) 5 times.</li>
+          <li>Zamorak Minions – Kill 10 minions in the Zamorakian Undercity.</li>
+          <li>Crystal Tree Blooms – Harvest 3 Crystal Tree Blooms while on an assigned Slayer task.</li>
+          <li>Reaper Assignments – Complete 1 Reaper task.</li>
+          <li>Dragonkin Laboratory – Kill the first boss in ED2.</li>
+          <li>God Wars 1 Minions – Kill 50 minions from any GWD1 faction.</li>
+          <li>Airut Slayer Task – Complete 15 Airut kills while on task.</li>
+          <li>Soul Reaper Streak – Achieve a streak of 3 completed reaper assignments.</li>
+        </ul>
+  
+        <div class="challenge-category">Medium Challenges 🎖️</div>
+        <ul>
+          <li>Araxxor – Kill Araxxor twice.</li>
+          <li>Gregorovic – Kill Gregorovic 3 times.</li>
+          <li>Vindicta – Kill Vindicta 3 times.</li>
+          <li>Kalphite King – Kill Kalphite King twice.</li>
+          <li>Queen Black Dragon – Complete 3 QBD kills.</li>
+          <li>Twin Furies – Kill the Twin Furies 3 times.</li>
+          <li>Nex (GWD1) – Kill Nex twice.</li>
+          <li>Elite Dungeons – Complete any Elite Dungeon (1, 2, or 3) once.</li>
+          <li>Rise of the Six – Complete a RotS run with proof of your kill count.</li>
+          <li>Gorvek & Vindicta – Kill Gorvek/Vindicta with a time under 2 minutes.</li>
+          <li>Wildy Bosses – Kill 5 different Wilderness bosses.</li>
+          <li>Crystal Shapeshifters – Kill 10 Crystal Shapeshifters in the Heart of Gielinor.</li>
+          <li>Kerapac (Normal) – Kill Kerapac twice in Normal Mode.</li>
+          <li>Abyssal Lords – Kill 15 Abyssal Lords.</li>
+          <li>Seiryu – Kill Seiryu once during ED3.</li>
+          <li>ED1 Boss Completion – Defeat all bosses in Elite Dungeon 1.</li>
+          <li>Duo Helwyr – Kill Helwyr in a duo team.</li>
+          <li>Warbands Clearing – Complete 2 Warbands events.</li>
+          <li>Raksha (Normal) – Kill Raksha twice.</li>
+        </ul>
+  
+        <div class="challenge-category">Hard Challenges 🔪</div>
+        <ul>
+          <li>Telos – Defeat Telos at any enrage twice.</li>
+          <li>Solak – Kill Solak once (solo or team).</li>
+          <li>Zamorakian Undercity – Complete the Zamorakian Undercity once.</li>
+          <li>Raksha – Kill Raksha twice.</li>
+          <li>Vorago – Complete a Vorago kill in any rotation.</li>
+          <li>The Arch-Glacor – Kill the Arch-Glacor at Hard Mode with all mechanics active.</li>
+          <li>Hard Mode Kerapac – Kill Kerapac in Hard Mode once.</li>
+          <li>Nex: Angel of Death – Kill Nex: AoD twice (solo or group).</li>
+          <li>100% Enrage Boss Kill – Defeat any boss at 100% enrage or higher.</li>
+          <li>Master Combatant – Defeat three hard bosses (Telos, Solak, Vorago) within the event timeline.</li>
+          <li>Duo Solak – Kill Solak with only 2 players.</li>
+          <li>High Enrage Streak – Achieve a 5-kill streak at Telos with at least 200%+ enrage.</li>
+          <li>Team Zamorak – Complete the Zamorak boss fight with a team of 4 or less players.</li>
+          <li>Perfect Raksha – Kill Raksha without taking any poison damage.</li>
+          <li>Hard Mode Vorago – Complete Hard Mode Vorago in any rotation.</li>
+          <li>No Deaths – Complete ED3 with no deaths in your team.</li>
+          <li>Ragefire Gland Farming – Obtain 3 Ragefire Glands from high-level mobs in Kerapac’s Lair.</li>
+          <li>AoD Group Perfection – Achieve a kill where no one in your team dies.</li>
+          <li>Solo Zamorak – Defeat Zamorak in Normal Mode solo.</li>
+          <li>Dual Boss Challenge – Kill any two bosses within 15 minutes (e.g., Raksha and Vindicta).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Gallery Page -->
+  <div id="gallery" class="page container hidden fade-in">
+    <div class="content-box">
+      <h1>🖼️ Event Gallery</h1>
+      <p>Explore some of the most legendary moments, iconic boss encounters, and breathtaking scenery!</p>
+    </div>
+    <!-- Gallery Grid -->
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openModal('https://static.wikia.nocookie.net/runescape/images/3/33/King_Black_Dragon.png')">
+        <img src="https://static.wikia.nocookie.net/runescape/images/3/33/King_Black_Dragon.png" alt="King Black Dragon">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://static.wikia.nocookie.net/runescape/images/6/6e/Giant_Mole.png')">
+        <img src="https://static.wikia.nocookie.net/runescape/images/6/6e/Giant_Mole.png" alt="Giant Mole">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://static.wikia.nocookie.net/runescape/images/8/89/Chaos_Elemental.png')">
+        <img src="https://static.wikia.nocookie.net/runescape/images/8/89/Chaos_Elemental.png" alt="Chaos Elemental">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://static.wikia.nocookie.net/runescape/images/7/70/Nex.png')">
+        <img src="https://static.wikia.nocookie.net/runescape/images/7/70/Nex.png" alt="Nex Boss">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600?text=Runescape+Scenery+1')">
+        <img src="https://via.placeholder.com/400x300?text=Runescape+Scenery+1" alt="Runescape Scenery 1">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600?text=Runescape+Scenery+2')">
+        <img src="https://via.placeholder.com/400x300?text=Runescape+Scenery+2" alt="Runescape Scenery 2">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600?text=Boss+Encounter')">
+        <img src="https://via.placeholder.com/400x300?text=Boss+Encounter" alt="Boss Encounter">
+      </div>
+      <div class="gallery-item" onclick="openModal('https://via.placeholder.com/800x600?text=Legendary+Battle')">
+        <img src="https://via.placeholder.com/400x300?text=Legendary+Battle" alt="Legendary Battle">
+      </div>
+    </div>
+  </div>
+  
+  <!-- Contact Page -->
+  <div id="contact" class="page container hidden fade-in">
+    <div class="content-box">
+      <h1>📞 Contact & Staff</h1>
+      <p><strong>Host:</strong> Gxlaxy (Main Contact)</p>
+      <p><strong>Clan Staff:</strong> Jen Bon Jovi, Lilbod, IceQueenVal, Fuzzums, NW Turtle</p>
+      <p>For more information and to reach our staff, join our <a href="https://discord.gg/lunarslight" target="_blank" style="color: #ffd700; text-decoration: underline;">Discord Server</a>.</p>
+    </div>
+    <!-- Contact Form -->
+    <div class="contact-form container">
+      <form id="contactForm" onsubmit="submitContactForm(event)">
+        <input type="text" id="contactName" placeholder="Your Name">
+        <input type="email" id="contactEmail" placeholder="Your Email">
+        <textarea id="contactMessage" rows="5" placeholder="Your Message"></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Gallery Modal -->
+  <div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+  
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">&#8679;</button>
+  
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Lunars Clash of the Titans. All Rights Reserved.
+  </footer>
+</body>
+</html>
